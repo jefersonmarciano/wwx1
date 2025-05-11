@@ -7,7 +7,7 @@ import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { useAuth } from "@/hooks/use-auth"
-import { LayoutDashboard, Users, Trophy, History, Settings, LogOut, Menu, X } from "lucide-react"
+import { LayoutDashboard, Users, Trophy, History, Settings, LogOut, Menu, X, Swords, Database } from "lucide-react"
 
 interface DashboardLayoutProps {
   children: React.ReactNode
@@ -21,6 +21,8 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
   const navItems = [
     { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
     { href: "/teams", label: "Times", icon: Users },
+    { href: "/collection", label: "Coleção", icon: Database },
+    { href: "/weapons", label: "Armas", icon: Swords },
     { href: "/tournaments", label: "Torneios", icon: Trophy },
     { href: "/history", label: "Histórico", icon: History },
     { href: "/settings", label: "Configurações", icon: Settings },
