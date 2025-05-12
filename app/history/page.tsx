@@ -320,18 +320,18 @@ export default function HistoryPage() {
                                   {character.imagePath ? (
                                     <Image
                                       src={character.imagePath || "/placeholder.svg"}
-                                      alt={character.name}
+                                      alt={character.name || "Personagem"}
                                       width={64}
                                       height={64}
                                       className="w-full h-full object-cover"
                                     />
                                   ) : (
                                     <div className="w-full h-full flex items-center justify-center text-gray-600">
-                                      {character.name.charAt(0)}
+                                      {character.name ? character.name.charAt(0) : "?"}
                                     </div>
                                   )}
                                   <div className="absolute bottom-0 left-0 w-full p-1 bg-black/60 text-xs truncate">
-                                    {character.name}
+                                    {character.name || "Desconhecido"}
                                   </div>
                                 </div>
                               </div>
@@ -354,18 +354,18 @@ export default function HistoryPage() {
                                   {character.imagePath ? (
                                     <Image
                                       src={character.imagePath || "/placeholder.svg"}
-                                      alt={character.name}
+                                      alt={character.name || "Personagem"}
                                       width={64}
                                       height={64}
                                       className="w-full h-full object-cover"
                                     />
                                   ) : (
                                     <div className="w-full h-full flex items-center justify-center text-gray-600">
-                                      {character.name.charAt(0)}
+                                      {character.name ? character.name.charAt(0) : "?"}
                                     </div>
                                   )}
                                   <div className="absolute bottom-0 left-0 w-full p-1 bg-black/60 text-xs truncate">
-                                    {character.name}
+                                    {character.name || "Desconhecido"}
                                   </div>
                                 </div>
                               </div>
@@ -408,14 +408,14 @@ export default function HistoryPage() {
                         {character.imagePath ? (
                           <Image
                             src={character.imagePath || "/placeholder.svg"}
-                            alt={character.name}
+                            alt={character.name || "Personagem"}
                             width={48}
                             height={48}
                             className="w-full h-full object-cover"
                           />
                         ) : (
                           <div className="w-full h-full flex items-center justify-center text-gray-600">
-                            {character.name.charAt(0)}
+                            {character.name ? character.name.charAt(0) : "?"}
                           </div>
                         )}
                       </div>

@@ -23,7 +23,7 @@ import { ArrowLeft, Trash2, Edit, Save } from "lucide-react"
 export default function TeamDetailsPage({ params }: { params: { id: string } }) {
   const router = useRouter();
   const { toast } = useToast();
-  const { teams, updateTeam, deleteTeam } = useTeams();
+  const { teams, updateTeam, removeTeam } = useTeams();
   const { characters } = useCharacters();
   const { weapons } = useWeapons();
   
@@ -53,7 +53,7 @@ export default function TeamDetailsPage({ params }: { params: { id: string } }) 
   );
   
   const handleDeleteTeam = () => {
-    deleteTeam(team.id);
+    removeTeam(team.id);
     router.push('/teams');
     
     toast({
@@ -166,5 +166,73 @@ export default function TeamDetailsPage({ params }: { params: { id: string } }) 
               {/* Implementação das Novas Funcionalidades para o Sistema de Torneio
 
               Vou implementar todas as modificações solicitadas, incluindo a exibição de armas vinculadas nos times, o sistema de decks com 15 personagens, e a sala de pick/ban com 6 escolhas por jogador e 3 pré-bans. */}
-
-\
+            </>
+          )}
+        </div>
+      </div>
+      
+      {/* Display team characters */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-6">
+        {teamCharacters.map(character => (
+          <div 
+            key={character.id}
+            className="bg-card rounded-lg p-4 flex items-center gap-4 shadow-sm"
+          >
+            <div className="flex-shrink-0 w-16 h-16 bg-muted rounded-md flex items-center justify-center overflow-hidden">
+              {character.imagePath ? (
+                <img src={character.imagePath} alt={character.name} className="w-full h-full object-cover" />
+              ) : (
+                <div className="text-3xl font-bold text-muted-foreground">{character.name.charAt(0)}</div>
+              )}
+            </div>
+            <div>
+              <h3 className="font-medium">{character.name}</h3>
+              <p className="text-sm text-muted-foreground">{character.element}</p>
+            </div>
+          </div>
+        ))}
+      </div>
+      
+      {/* Edit mode */}
+      {isEditing && (
+        <div className="mt-8">
+          <h2 className="text-xl font-semibold mb-4">Editar Deck</h2>
+          <div className="mb-4">
+            <label htmlFor="teamName" className="block text-sm font-medium mb-1">Nome do Deck</label>
+            <input
+              id="teamName"
+              type="text"
+              value={editName}
+              onChange={(e) => setEditName(e.target.value)}
+              className="w-full px-3 py-2 border rounded-md"
+            />
+          </div>
+          
+          <h3 className="text-lg font-medium mb-2">Selecione os Personagens ({editCharacters.length} selecionados)</h3>
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
+            {characters.map(character => (
+              <div 
+                key={character.id}
+                onClick={() => handleSelectCharacter(character.id)}
+                className={`cursor-pointer p-3 rounded-md flex items-center gap-2 ${
+                  editCharacters.includes(character.id) 
+                    ? 'bg-primary/10 border border-primary' 
+                    : 'bg-card hover:bg-card/80 border border-transparent'
+                }`}
+              >
+                <div className="w-10 h-10 rounded-full bg-muted flex items-center justify-center overflow-hidden">
+                  {character.imagePath ? (
+                    <img src={character.imagePath} alt="" className="w-full h-full object-cover" />
+                  ) : (
+                    <span className="text-lg font-semibold">{character.name.charAt(0)}</span>
+                  )}
+                </div>
+                <span className="text-sm font-medium">{character.name}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}

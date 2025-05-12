@@ -54,9 +54,8 @@ export default function CharacterSelector({
 
   const handleSelect = (character: Character) => {
     onSelect(character)
-    if (!multiSelect) {
-      onOpenChange(false)
-    }
+    // Removido o fechamento automático do modal quando não é multiSelect
+    // Agora o modal só fecha quando o usuário clica em "Concluído" ou "Cancelar"
   }
 
   return (

@@ -65,7 +65,8 @@ export default function TeamsPage() {
         setSelectedCharacters([...selectedCharacters, character])
       }
     }
-    setIsCharacterSelectorOpen(false)
+    // Não fechamos mais o modal automaticamente
+    // setIsCharacterSelectorOpen(false)
   }
 
   const handleRemoveCharacter = (characterId: string) => {
@@ -399,7 +400,7 @@ export default function TeamsPage() {
 
       {/* Modal de criação de time/deck */}
       <Dialog open={isCreateTeamOpen} onOpenChange={setIsCreateTeamOpen}>
-        <DialogContent className="sm:max-w-2xl">
+        <DialogContent className="sm:max-w-md">
           <DialogHeader>
             <DialogTitle>{isDeckCreation ? "Criar Novo Deck de Torneio" : "Criar Novo Time"}</DialogTitle>
             <DialogDescription>
@@ -409,7 +410,7 @@ export default function TeamsPage() {
             </DialogDescription>
           </DialogHeader>
 
-          <div className="space-y-6 py-4">
+          <div className="space-y-4 py-4">
             <div className="space-y-2">
               <Label htmlFor="teamName">{isDeckCreation ? "Nome do Deck" : "Nome do Time"}</Label>
               <Input
@@ -427,8 +428,10 @@ export default function TeamsPage() {
                   ? `Personagens (Mínimo: 15, Selecionados: ${selectedCharacters.length})`
                   : "Personagens (Máximo: 3)"}
               </Label>
-              <div className="grid grid-cols-1 sm:grid-cols-5 gap-2">
-                {selectedCharacters.slice(0, isDeckCreation ? 15 : 3).map((character) => (
+
+              {/* Mostrar apenas alguns personagens selecionados para economizar espaço */}
+              <div className="grid grid-cols-5 gap-2">
+                {selectedCharacters.slice(0, 5).map((character) => (
                   <div key={character.id} className="relative">
                     <div className="aspect-square bg-gray-800 rounded-md overflow-hidden">
                       <div className="absolute top-0 right-0 p-1">
@@ -457,60 +460,15 @@ export default function TeamsPage() {
                       )}
                       <div className="absolute bottom-0 left-0 w-full p-1 bg-black/60">
                         <div className="text-xs text-white truncate">{character.name}</div>
-                        <div className="text-xs text-gray-400">
-                          {character.rarity}★ | {character.element}
-                        </div>
                       </div>
                     </div>
                   </div>
                 ))}
 
-                {/* Mostrar mais personagens para decks */}
-                {isDeckCreation && selectedCharacters.length > 15 && (
-                  <div className="col-span-5 mt-2">
-                    <details className="text-sm">
-                      <summary className="cursor-pointer text-primary">
-                        Mostrar {selectedCharacters.length - 15} personagens adicionais
-                      </summary>
-                      <div className="grid grid-cols-1 sm:grid-cols-5 gap-2 mt-2">
-                        {selectedCharacters.slice(15).map((character) => (
-                          <div key={character.id} className="relative">
-                            <div className="aspect-square bg-gray-800 rounded-md overflow-hidden">
-                              <div className="absolute top-0 right-0 p-1">
-                                <Button
-                                  variant="destructive"
-                                  size="icon"
-                                  className="h-6 w-6 rounded-full"
-                                  type="button"
-                                  onClick={() => handleRemoveCharacter(character.id)}
-                                >
-                                  <X className="h-3 w-3" />
-                                </Button>
-                              </div>
-                              {character.imagePath ? (
-                                <Image
-                                  src={character.imagePath || "/placeholder.svg"}
-                                  alt={character.name}
-                                  width={100}
-                                  height={100}
-                                  className="w-full h-full object-cover"
-                                />
-                              ) : (
-                                <div className="w-full h-full flex items-center justify-center text-xl font-bold text-gray-600">
-                                  {character.name.charAt(0)}
-                                </div>
-                              )}
-                              <div className="absolute bottom-0 left-0 w-full p-1 bg-black/60">
-                                <div className="text-xs text-white truncate">{character.name}</div>
-                                <div className="text-xs text-gray-400">
-                                  {character.rarity}★ | {character.element}
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                        ))}
-                      </div>
-                    </details>
+                {/* Mostrar quantos personagens adicionais estão selecionados */}
+                {selectedCharacters.length > 5 && (
+                  <div className="aspect-square bg-gray-800/50 rounded-md border border-dashed border-gray-700 flex items-center justify-center">
+                    <span className="text-sm text-gray-400">+{selectedCharacters.length - 5}</span>
                   </div>
                 )}
 
@@ -537,40 +495,39 @@ export default function TeamsPage() {
               )}
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-              <div className="bg-card border rounded-md p-4">
-                <div className="text-sm font-medium text-muted-foreground mb-1">
-                  {isDeckCreation ? "Total de Personagens" : "Total de Personagens"}
-                </div>
-                <div className="text-2xl font-bold">
+            {/* Estatísticas em uma única linha */}
+            <div className="flex gap-2 justify-between">
+              <div className="bg-card border rounded-md p-2 flex-1">
+                <div className="text-xs font-medium text-muted-foreground">Total</div>
+                <div className="text-lg font-bold">
                   {selectedCharacters.length}/{isDeckCreation ? "15+" : "3"}
                 </div>
               </div>
 
-              <div className="bg-card border rounded-md p-4">
-                <div className="text-sm font-medium text-muted-foreground mb-1">Personagens 5★</div>
-                <div className="text-2xl font-bold">{selectedCharacters.filter((c) => c.rarity === 5).length}</div>
+              <div className="bg-card border rounded-md p-2 flex-1">
+                <div className="text-xs font-medium text-muted-foreground">5★</div>
+                <div className="text-lg font-bold">{selectedCharacters.filter((c) => c.rarity === 5).length}</div>
               </div>
 
-              <div className="bg-card border rounded-md p-4">
-                <div className="text-sm font-medium text-muted-foreground mb-1">Personagens 4★</div>
-                <div className="text-2xl font-bold">{selectedCharacters.filter((c) => c.rarity === 4).length}</div>
+              <div className="bg-card border rounded-md p-2 flex-1">
+                <div className="text-xs font-medium text-muted-foreground">4★</div>
+                <div className="text-lg font-bold">{selectedCharacters.filter((c) => c.rarity === 4).length}</div>
               </div>
             </div>
 
             {isDeckCreation && (
-              <div className="bg-yellow-950/20 border border-yellow-600/30 rounded-md p-4">
-                <h3 className="text-sm font-medium text-yellow-500 mb-2">Requisitos para Torneio</h3>
-                <ul className="text-sm space-y-1 text-muted-foreground">
+              <div className="bg-yellow-950/20 border border-yellow-600/30 rounded-md p-3">
+                <h3 className="text-sm font-medium text-yellow-500 mb-1">Requisitos para Torneio</h3>
+                <ul className="text-xs space-y-1 text-muted-foreground">
                   <li className="flex items-center">
                     <div
-                      className={`w-4 h-4 mr-2 rounded-full ${selectedCharacters.length >= 15 ? "bg-green-500" : "bg-gray-500"}`}
+                      className={`w-3 h-3 mr-2 rounded-full ${selectedCharacters.length >= 15 ? "bg-green-500" : "bg-gray-500"}`}
                     ></div>
                     Mínimo de 15 personagens
                   </li>
                   <li className="flex items-center">
                     <div
-                      className={`w-4 h-4 mr-2 rounded-full ${calculateTeamCost(selectedCharacters.map((c) => c.id)) >= 250 ? "bg-green-500" : "bg-gray-500"}`}
+                      className={`w-3 h-3 mr-2 rounded-full ${calculateTeamCost(selectedCharacters.map((c) => c.id)) >= 250 ? "bg-green-500" : "bg-gray-500"}`}
                     ></div>
                     Custo mínimo de 250 pontos
                   </li>

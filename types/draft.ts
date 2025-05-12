@@ -1,6 +1,6 @@
 export type DraftPhase = "preban" | "pick" | "complete"
 
-export type DraftTeam = {
+export type DraftPlayer = {
   id: string
   name: string
   characters: string[]
@@ -11,8 +11,8 @@ export type DraftState = {
   id: string
   phase: DraftPhase
   turn: "player1" | "player2"
-  player1: DraftTeam
-  player2: DraftTeam
+  player1: DraftPlayer
+  player2: DraftPlayer
   prebans: string[]
   picks: {
     player1: string[]
@@ -30,77 +30,64 @@ export type DraftSettings = {
   maxBans: number
   maxPreBans: number
   pointLimit: number
-  characterCosts: {
-    [key: string]: number
-  }
-  weaponCosts: {
-    [key: string]: number
-  }
-  constellationMultipliers: {
-    [key: number]: number
-  }
-  refinementMultipliers: {
-    [key: number]: number
-  }
+  characterCosts: { [key: string]: number }
+  weaponCosts: { [key: string]: number }
+  constellationMultipliers: { [key: number]: number }
+  refinementMultipliers: { [key: number]: number }
 }
 
-export type TournamentRules = {
-  minRosterSize: number
-  minAccountCost: number
-  maxWeaponPoints: number
-  restartPenalties: {
-    [key: number]: number
+export interface DraftRules {
+  maxPicks: number
+  maxBans: number
+  maxPreBans: number
+  pointLimit: number
+  characterCostMultiplier: {
+    rarity5: number
+    rarity4: number
   }
-  timeLimit: number
-  additionalTimeLimit: number
+  weaponCostMultiplier: {
+    rarity5: number
+    rarity4: number
+  }
+  constellationMultipliers: { [key: number]: number }
+  refinementMultipliers: { [key: number]: number }
+}
+
+export const DEFAULT_DRAFT_RULES: DraftRules = {
+  maxPicks: 6,
+  maxBans: 3,
+  maxPreBans: 3,
+  pointLimit: 1500,
+  characterCostMultiplier: {
+    rarity5: 10,
+    rarity4: 5,
+  },
+  weaponCostMultiplier: {
+    rarity5: 4,
+    rarity4: 2,
+  },
+  constellationMultipliers: {
+    0: 1.0,
+    1: 1.1,
+    2: 1.2,
+    3: 1.3,
+    4: 1.4,
+    5: 1.5,
+    6: 1.6,
+  },
+  refinementMultipliers: {
+    1: 1.0,
+    2: 1.1,
+    3: 1.2,
+    4: 1.3,
+    5: 1.4,
+  },
 }
 
 export interface DraftPoints {
-  characterPoints: number
-  constellationPoints: number
-  weaponPoints: number
-  refinementPoints: number
   totalPoints: number
-}
-
-// Definição da interface para as regras do draft
-export interface DraftRules {
-  maxPoints: number
-  characterValues: {
-    rarity4: number
-    rarity5: number
-  }
-  constellationValues: {
-    value: number
-    multiplier: boolean
-  }
-  refinementValues: {
-    value: number
-    multiplier: boolean
-  }
-  weaponValues: {
-    rarity4: number
-    rarity5: number
-  }
-}
-
-// Regras padrão para o draft
-export const DEFAULT_DRAFT_RULES: DraftRules = {
-  maxPoints: 1000,
-  characterValues: {
-    rarity4: 100,
-    rarity5: 200,
-  },
-  constellationValues: {
-    value: 50,
-    multiplier: true,
-  },
-  refinementValues: {
-    value: 25,
-    multiplier: true,
-  },
-  weaponValues: {
-    rarity4: 50,
-    rarity5: 100,
-  },
+  characterPoints: number
+  weaponPoints: number
+  constellationPoints: number
+  refinementPoints: number
 }
